@@ -1,0 +1,40 @@
+services:
+  sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mf_sql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Your_strong*Password123
+    ports: ["1433:1433"]
+    volumes: ["sql_data:/var/opt/mssql"]
+
+  app:
+    build:
+      context: .
+      dockerfile: src/AppHost/Dockerfile
+    container_name: mf_app
+    environment:
+      - ASPNETCORE_URLS=http://+:8081
+    depends_on: [ sql ]
+    ports: ["8081:8081"]
+
+  api:
+    build:
+      context: .
+      dockerfile: src/Api/Dockerfile
+    container_name: mf_api
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+    depends_on: [ app ]
+    ports: ["8080:8080"]
+
+  frontend:
+    build:
+      context: ./src/Frontend
+      dockerfile: Dockerfile
+    container_name: mf_frontend
+    depends_on: [ api ]
+    ports: ["4321:80"]
+
+volumes:
+  sql_data:

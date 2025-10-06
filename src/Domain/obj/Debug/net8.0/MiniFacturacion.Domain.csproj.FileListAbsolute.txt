@@ -1,0 +1,11 @@
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/bin/Debug/net8.0/MiniFacturacion.Domain.deps.json
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/bin/Debug/net8.0/MiniFacturacion.Domain.dll
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/bin/Debug/net8.0/MiniFacturacion.Domain.pdb
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/obj/Debug/net8.0/MiniFacturacion.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/obj/Debug/net8.0/MiniFacturacion.Domain.AssemblyInfoInputs.cache
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/obj/Debug/net8.0/MiniFacturacion.Domain.AssemblyInfo.cs
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/obj/Debug/net8.0/MiniFacturacion.Domain.csproj.CoreCompileInputs.cache
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/obj/Debug/net8.0/MiniFacturacion.Domain.dll
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/obj/Debug/net8.0/refint/MiniFacturacion.Domain.dll
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/obj/Debug/net8.0/MiniFacturacion.Domain.pdb
+/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Domain/obj/Debug/net8.0/ref/MiniFacturacion.Domain.dll
