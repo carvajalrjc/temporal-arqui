@@ -1,0 +1,99 @@
+---
+import { crearFactura, montoEnLetras } from "../services/appService";
+const title = "Facturas (SOAP)";
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font-family: system-ui, -apple-system, Arial; margin: 20px; }
+      form, .card { border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+      label { display: block; margin: 6px 0 2px; }
+      input, select { width: 100%; padding: 8px; margin-bottom: 8px; }
+      button { padding: 8px 12px; cursor: pointer; }
+      .error { color: #a00; }
+      .ok { color: #0a0; }
+      nav a { margin-right: 10px; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Clientes</a>
+      <a href="/facturas">Facturas</a>
+    </nav>
+
+    <h1>{title}</h1>
+
+    <div class="card">
+      <h2>Crear factura</h2>
+      <form id="f-factura">
+        <label>Cliente ID</label>
+        <input name="clienteId" type="number" required />
+        <label>Fecha (YYYY-MM-DD)</label>
+        <input name="fechaIso" placeholder="2025-10-06" required />
+        <label>Monto</label>
+        <input name="monto" type="number" step="0.01" required />
+        <label>Moneda</label>
+        <input name="moneda" value="COP" required />
+        <button type="submit">Crear</button>
+      </form>
+      <div id="msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>Monto en letras</h2>
+      <form id="f-letras">
+        <label>Monto</label>
+        <input name="monto" type="number" step="0.01" required />
+        <label>Moneda</label>
+        <input name="moneda" value="COP" required />
+        <label>Cultura</label>
+        <input name="cultura" value="es-CO" required />
+        <button type="submit">Calcular</button>
+      </form>
+      <div id="res-letras"></div>
+    </div>
+
+    <script type="module" client:load>
+      import { crearFactura, montoEnLetras } from "../services/appService";
+      const $ = (s)=>document.querySelector(s);
+
+      $("#f-factura").addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        $("#msg").textContent = "";
+        const fd = new FormData(ev.currentTarget);
+        const payload = {
+          clienteId: Number(fd.get("clienteId")),
+          fechaIso: fd.get("fechaIso")?.toString() ?? "",
+          monto: Number(fd.get("monto")),
+          moneda: fd.get("moneda")?.toString() ?? "COP",
+        };
+        try {
+          const { id } = await crearFactura(payload);
+          $("#msg").innerHTML = `<p class="ok">Factura creada con ID ${id}</p>`;
+          ev.currentTarget.reset();
+        } catch(e){
+          $("#msg").innerHTML = `<p class="error">${e.message}</p>`;
+        }
+      });
+
+      $("#f-letras").addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        const fd = new FormData(ev.currentTarget);
+        try {
+          const { texto } = await montoEnLetras(
+            Number(fd.get("monto")),
+            fd.get("moneda")?.toString() ?? "COP",
+            fd.get("cultura")?.toString() ?? "es-CO",
+          );
+          $("#res-letras").innerHTML = `<p class="ok">${texto}</p>`;
+        } catch(e) {
+          $("#res-letras").innerHTML = `<p class="error">${e.message}</p>`;
+        }
+      });
+    </script>
+  </body>
+</html>

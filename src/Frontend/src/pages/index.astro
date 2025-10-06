@@ -1,0 +1,110 @@
+---
+import { listarClientes, crearCliente } from "../services/appService";
+
+// Nota: este front usa llamadas desde el navegador (client-side).
+// Para simplificar, todo el JS va en un <script type="module"> con client:load.
+const title = "Clientes (SOAP)";
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font-family: system-ui, -apple-system, Arial; margin: 20px; }
+      form, .card { border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+      label { display: block; margin: 6px 0 2px; }
+      input { width: 100%; padding: 8px; margin-bottom: 8px; }
+      button { padding: 8px 12px; cursor: pointer; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
+      .error { color: #a00; }
+      .ok { color: #0a0; }
+      nav a { margin-right: 10px; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Clientes</a>
+      <a href="/facturas">Facturas</a>
+    </nav>
+
+    <h1>{title}</h1>
+
+    <div class="card">
+      <h2>Crear cliente</h2>
+      <form id="f-nuevo">
+        <label>Nombres</label>
+        <input name="nombres" required />
+        <label>Documento</label>
+        <input name="documento" required />
+        <label>Email</label>
+        <input type="email" name="email" required />
+        <button type="submit">Crear</button>
+      </form>
+      <div id="msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>Lista</h2>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <input id="q" placeholder="Buscar..." />
+        <button id="btn-buscar">Buscar</button>
+      </div>
+      <div id="lista"></div>
+    </div>
+
+    <script type="module" client:load>
+      import { listarClientes, crearCliente } from "../services/appService";
+
+      const $ = (sel) => document.querySelector(sel);
+      const lista = $("#lista");
+      const msg = $("#msg");
+
+      async function cargar(pagina = 1, tam = 10, q = "") {
+        lista.textContent = "Cargando...";
+        try {
+          const { items, total } = await listarClientes(pagina, tam, q);
+          const rows = items.map(c =>
+            `<tr><td>${c.id}</td><td>${c.nombres}</td><td>${c.documento}</td><td>${c.email}</td></tr>`
+          ).join("");
+          lista.innerHTML = `
+            <p>Total: ${total}</p>
+            <table>
+              <thead><tr><th>ID</th><th>Nombres</th><th>Documento</th><th>Email</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>`;
+        } catch (e) {
+          lista.innerHTML = `<p class="error">${e.message}</p>`;
+        }
+      }
+
+      $("#btn-buscar").addEventListener("click", () => {
+        const q = $("#q").value.trim();
+        cargar(1, 10, q);
+      });
+
+      $("#f-nuevo").addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        msg.textContent = "";
+        const fd = new FormData(ev.currentTarget);
+        const payload = {
+          nombres: fd.get("nombres")?.toString() ?? "",
+          documento: fd.get("documento")?.toString() ?? "",
+          email: fd.get("email")?.toString() ?? "",
+        };
+        try {
+          const { id } = await crearCliente(payload);
+          msg.innerHTML = `<p class="ok">Creado con ID ${id}</p>`;
+          ev.currentTarget.reset();
+          cargar();
+        } catch (e) {
+          msg.innerHTML = `<p class="error">${e.message}</p>`;
+        }
+      });
+
+      cargar();
+    </script>
+  </body>
+</html>
