@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bzjoyuLD2zg=",
+  "dgSpecHash": "uGHT9uoeXLo=",
   "success": true,
   "projectFilePath": "/Users/carvajal/Documents/Universidad/Ingeniería de Sistemas/Arquitectura de Software/mini-facturacion-soap/src/Api/MiniFacturacion.Api.csproj",
   "expectedPackageFiles": [
@@ -99,7 +99,6 @@
     "/Users/carvajal/.nuget/packages/system.memory.data/1.0.2/system.memory.data.1.0.2.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.net.websockets.websocketprotocol/5.1.0/system.net.websockets.websocketprotocol.5.1.0.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.numerics.vectors/4.6.0/system.numerics.vectors.4.6.0.nupkg.sha512",
-    "/Users/carvajal/.nuget/packages/system.private.servicemodel/4.10.2/system.private.servicemodel.4.10.2.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.reflection.dispatchproxy/4.8.2/system.reflection.dispatchproxy.4.8.2.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.reflection.metadata/8.0.1/system.reflection.metadata.8.0.1.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.runtime/4.3.0/system.runtime.4.3.0.nupkg.sha512",
@@ -111,8 +110,8 @@
     "/Users/carvajal/.nuget/packages/system.security.cryptography.protecteddata/8.0.0/system.security.cryptography.protecteddata.8.0.0.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.security.cryptography.xml/8.0.2/system.security.cryptography.xml.8.0.2.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.security.principal.windows/5.0.0/system.security.principal.windows.5.0.0.nupkg.sha512",
-    "/Users/carvajal/.nuget/packages/system.servicemodel.http/4.10.2/system.servicemodel.http.4.10.2.nupkg.sha512",
-    "/Users/carvajal/.nuget/packages/system.servicemodel.primitives/4.10.2/system.servicemodel.primitives.4.10.2.nupkg.sha512",
+    "/Users/carvajal/.nuget/packages/system.servicemodel.http/8.0.0/system.servicemodel.http.8.0.0.nupkg.sha512",
+    "/Users/carvajal/.nuget/packages/system.servicemodel.primitives/8.0.0/system.servicemodel.primitives.8.0.0.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.text.encoding/4.3.0/system.text.encoding.4.3.0.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.text.encoding.codepages/6.0.0/system.text.encoding.codepages.6.0.0.nupkg.sha512",
     "/Users/carvajal/.nuget/packages/system.text.encodings.web/9.0.9/system.text.encodings.web.9.0.9.nupkg.sha512",

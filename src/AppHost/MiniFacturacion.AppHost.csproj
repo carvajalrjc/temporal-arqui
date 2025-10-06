@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Domain\MiniFacturacion.Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\MiniFacturacion.Infrastructure.csproj" />
+    <ProjectReference Include="..\Contracts\MiniFacturacion.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

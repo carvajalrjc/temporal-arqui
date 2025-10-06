@@ -1,52 +1,69 @@
 using CoreWCF;
-using CoreWCF.Configuration;   // paquete CoreWCF.ConfigurationManager
-using CoreWCF.Description;     // ServiceMetadataBehavior
-using Microsoft.EntityFrameworkCore;
-using MiniFacturacion.Api;
-using MiniFacturacion.Application;
-using MiniFacturacion.Infrastructure;
+using CoreWCF.Configuration;
+using CoreWCF.Description;
+using MiniFacturacion.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// EF Core
-builder.Services.AddDbContext<AppDbContext>(opts =>
-    opts.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
-
-// DI
-builder.Services.AddScoped<IClientesRepository, ClientesRepository>();
-builder.Services.AddScoped<IFacturasRepository, FacturasRepository>();
-builder.Services.AddScoped<IClientesService, ClientesService>();
-builder.Services.AddScoped<IFacturasService, FacturasService>();
-builder.Services.AddSingleton<IMontosService, MontosService>();
-
-// 👉 REGISTRA EL SERVICIO SOAP EN DI
-// Usa Scoped (o Transient). No uses Singleton porque inyectas servicios Scoped.
-builder.Services.AddScoped<MiniFacturacionService>();
-
-// CoreWCF + WSDL (sin MEX)
-builder.Services.AddServiceModelServices();
-builder.Services.AddServiceModelMetadata();
-builder.Services.AddSingleton<ServiceMetadataBehavior>(_ => new ServiceMetadataBehavior
-{
-    HttpGetEnabled = true,   // habilita ?wsdl
-    HttpsGetEnabled = false
-});
-
+// CORS sólo para el front
 builder.Services.AddCors(o => o.AddPolicy("astro", p => p
-    .WithOrigins("http://localhost:4321") // dev Astro
+    .WithOrigins("http://localhost:4321")
     .AllowAnyHeader()
     .AllowAnyMethod()
 ));
 
+// CoreWCF (servidor)
+builder.Services.AddServiceModelServices();
+builder.Services.AddServiceModelMetadata();
+builder.Services.AddSingleton<ServiceMetadataBehavior>(_ => new ServiceMetadataBehavior
+{
+    HttpGetEnabled = true
+});
+
+// Cliente SOAP (WCF clásico) hacia el SAD
+builder.Services.AddScoped<IAppService>(_ =>
+{
+    var binding = new System.ServiceModel.BasicHttpBinding();
+    var address = new System.ServiceModel.EndpointAddress(
+        Environment.GetEnvironmentVariable("SAD_URL") ?? "http://app:8081/soap/app"
+    );
+    var factory = new System.ServiceModel.ChannelFactory<IAppService>(binding, address);
+    return factory.CreateChannel();
+});
+
+// Servicio gateway que implementa el contrato y reenvía al SAD
+builder.Services.AddScoped<MiniFacturacion.Api.GatewaySoapService>();
+
 var app = builder.Build();
 
-app.UseCors("astro"); // solo permite que Astro haga POST SOAP
+app.UseCors("astro");
 
 app.UseServiceModel(sm =>
 {
-    sm.AddService<MiniFacturacionService>();
-    sm.AddServiceEndpoint<MiniFacturacionService, IMiniFacturacionService>(
-        new BasicHttpBinding(), "/soap/mini");
+    sm.AddService<MiniFacturacion.Api.GatewaySoapService>();
+
+    sm.AddServiceEndpoint<MiniFacturacion.Api.GatewaySoapService, IAppService>(
+        new CoreWCF.BasicHttpBinding(), "/soap/mini"
+    );
+
+    // 🔎 Enviar detalles de excepción en las Faults
+    sm.ConfigureServiceHostBase<MiniFacturacion.Api.GatewaySoapService>(host =>
+    {
+        var debug = host.Description.Behaviors.Find<ServiceDebugBehavior>();
+        if (debug == null)
+        {
+            host.Description.Behaviors.Add(new ServiceDebugBehavior
+            {
+                IncludeExceptionDetailInFaults = true
+            });
+        }
+        else
+        {
+            debug.IncludeExceptionDetailInFaults = true;
+        }
+    });
 });
+
+
 
 app.Run();

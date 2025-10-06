@@ -11,12 +11,12 @@ using System;
 using System.Reflection;
 
 [assembly: CoreWCF.EnableCoreWCFOperationInvokerGenerator(false)]
-[assembly: System.Reflection.AssemblyCompanyAttribute("MiniFacturacion.Api")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("MiniFacturacion.Contracts")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d17d5903e3c9a2e0d95b60389b938d290f6ad255")]
-[assembly: System.Reflection.AssemblyProductAttribute("MiniFacturacion.Api")]
-[assembly: System.Reflection.AssemblyTitleAttribute("MiniFacturacion.Api")]
+[assembly: System.Reflection.AssemblyProductAttribute("MiniFacturacion.Contracts")]
+[assembly: System.Reflection.AssemblyTitleAttribute("MiniFacturacion.Contracts")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Generado por la clase WriteCodeFragment de MSBuild.

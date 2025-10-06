@@ -1,12 +1,19 @@
 services:
   sql:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64               # en Mac ARM (M1/M2) corre por emulación
     container_name: mf_sql
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=Your_strong*Password123
+      - SA_PASSWORD=Your_password123!   # <- usa esta misma en la app
     ports: ["1433:1433"]
     volumes: ["sql_data:/var/opt/mssql"]
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Your_password123!' -C -Q 'SELECT 1' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   app:
     build:
@@ -15,8 +22,12 @@ services:
     container_name: mf_app
     environment:
       - ASPNETCORE_URLS=http://+:8081
-    depends_on: [ sql ]
+      - ConnectionStrings__SqlServer=Server=sql,1433;Database=MiniFacturacion;User ID=sa;Password=Your_password123!;TrustServerCertificate=True;Encrypt=False
+    depends_on:
+      sql:
+        condition: service_healthy
     ports: ["8081:8081"]
+    restart: unless-stopped
 
   api:
     build:
@@ -24,9 +35,10 @@ services:
       dockerfile: src/Api/Dockerfile
     container_name: mf_api
     environment:
-      - ASPNETCORE_URLS=http://+:8080
+      - SAD_URL=http://app:8081/soap/app   # <- apunta al SERVICIO app en el puerto correcto
     depends_on: [ app ]
     ports: ["8080:8080"]
+    restart: unless-stopped
 
   frontend:
     build:
@@ -35,6 +47,7 @@ services:
     container_name: mf_frontend
     depends_on: [ api ]
     ports: ["4321:80"]
+    restart: unless-stopped
 
 volumes:
   sql_data:
